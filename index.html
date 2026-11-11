@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>tidydate: a 1 kB date formatter for JavaScript</title>
+  <meta name="description" content="tidydate formats dates in one call. 1 kB, no dependencies, works in Node and in the browser.">
+  <style>
+    :root { --ink: #1b1f24; --dim: #5b6470; --line: #e3e6ea; --accent: #0969da; --bg: #ffffff; --soft: #f6f8fa; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; color: var(--ink); background: var(--bg); }
+    header { border-bottom: 1px solid var(--line); }
+    nav { max-width: 860px; margin: 0 auto; padding: 16px 24px; display: flex; gap: 22px; align-items: center; }
+    nav strong { font-size: 19px; margin-right: auto; }
+    nav a { color: var(--dim); text-decoration: none; font-size: 15px; }
+    main { max-width: 860px; margin: 0 auto; padding: 8px 24px 80px; }
+    .hero { padding: 54px 0 30px; }
+    h1 { font-size: 46px; line-height: 1.12; margin: 0 0 14px; letter-spacing: -0.02em; }
+    .hero p { font-size: 20px; color: var(--dim); margin: 0 0 22px; max-width: 620px; }
+    .pill { display: inline-block; font-size: 13px; padding: 3px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--dim); margin-right: 6px; }
+    h2 { font-size: 26px; margin: 46px 0 10px; padding-top: 18px; border-top: 1px solid var(--line); }
+    pre { background: var(--soft); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; overflow: auto; font: 14px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; }
+    code { font: 14px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--soft); padding: 1px 5px; border-radius: 5px; }
+    pre code { background: none; padding: 0; }
+    table { border-collapse: collapse; width: 100%; font-size: 15px; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+    th { color: var(--dim); font-weight: 600; }
+    h3 { font-size: 18px; margin: 22px 0 4px; }
+    a { color: var(--accent); }
+    footer { border-top: 1px solid var(--line); color: var(--dim); font-size: 14px; }
+    footer div { max-width: 860px; margin: 0 auto; padding: 22px 24px; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <strong>tidydate</strong>
+      <a href="#install">Install</a>
+      <a href="#usage">Usage</a>
+      <a href="#tokens">Tokens</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Format dates in one call.</h1>
+      <p>tidydate is a 1 kB date formatter for JavaScript. No dependencies, no configuration, and it works in Node and in the browser.</p>
+      <span class="pill">v2.3.0</span><span class="pill">1 kB gzipped</span><span class="pill">MIT license</span>
+    </section>
+
+    <h2 id="install">Install</h2>
+    <pre><code>npm install tidydate</code></pre>
+    <p>Or load it from a CDN with a script tag: <code>https://cdn.example.com/tidydate@2/tidydate.min.js</code>. Node 18 or newer is required.</p>
+
+    <h2 id="usage">Usage</h2>
+    <pre><code>import { format, fromNow } from "tidydate";
+
+format(new Date(), "YYYY-MM-DD");        // "2026-11-12"
+format(new Date(), "D MMM YYYY, HH:mm"); // "12 Nov 2026, 09:30"
+fromNow("2026-11-10");                   // "2 days ago"</code></pre>
+    <p><code>format(date, pattern, locale)</code> takes a Date, a timestamp or an ISO string. The third argument is an optional locale such as <code>"fr"</code> or <code>"ja"</code>; month and weekday names come from the built-in <code>Intl</code> API, so every locale your runtime knows is supported.</p>
+
+    <h2 id="tokens">Tokens</h2>
+    <table>
+      <tr><th>Token</th><th>Output</th><th>Meaning</th></tr>
+      <tr><td><code>YYYY</code></td><td>2026</td><td>Four-digit year</td></tr>
+      <tr><td><code>MM</code></td><td>11</td><td>Month, two digits</td></tr>
+      <tr><td><code>MMM</code></td><td>Nov</td><td>Short month name</td></tr>
+      <tr><td><code>D</code> / <code>DD</code></td><td>5 / 05</td><td>Day of the month</td></tr>
+      <tr><td><code>ddd</code></td><td>Thu</td><td>Short weekday name</td></tr>
+      <tr><td><code>HH</code> / <code>hh</code></td><td>21 / 09</td><td>Hour, 24-hour or 12-hour</td></tr>
+      <tr><td><code>mm</code> / <code>ss</code></td><td>30 / 07</td><td>Minutes and seconds</td></tr>
+      <tr><td><code>A</code></td><td>PM</td><td>AM or PM</td></tr>
+    </table>
+
+    <h2 id="faq">FAQ</h2>
+    <h3>Does it handle time zones?</h3>
+    <p>Yes. Pass <code>{ timeZone: "Asia/Tokyo" }</code> as the last argument and the date is formatted in that zone. Without it, the local time zone is used.</p>
+    <h3>Can it parse dates?</h3>
+    <p>No. tidydate only formats. To parse, use <code>new Date()</code> with an ISO string, or the Temporal API.</p>
+    <h3>Does it work with TypeScript?</h3>
+    <p>Yes. Type definitions ship with the package, so there is nothing extra to install.</p>
+    <h3>How do I report a bug?</h3>
+    <p>Open an issue on GitHub with the input, the pattern and the output you expected. Fixes for confirmed bugs usually ship within a week.</p>
+  </main>
+
+  <footer><div>tidydate is a demo project for a tutorial. MIT license.</div></footer>
+</body>
+</html>
